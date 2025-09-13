@@ -1,48 +1,71 @@
 <template>
-  <div>
-    <!-- Create button -->
-    <Button label="Create User" icon="pi pi-check" @click="createUser" />
-
-    <!-- Load users button -->
-    <Button label="Load Users" icon="pi pi-users" @click="getUsers" class="ml-2" />
-
-    <!-- Show feedback message -->
-    <p>{{ message }}</p>
-
-    <!-- Show list of users -->
-    <ul>
-      <li v-for="user in users" :key="user.id">
-        {{ user.username }} - {{ user.email }}
-      </li>
-    </ul>
+  <h2>Create User</h2>
+  <div class="card flex justify-center">
+    <Toast />
+    <Form v-slot="$form" :resolver="resolver" :initialValues="{ username: '', email: '' }" @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
+      <div class="flex flex-col gap-1">
+        <InputText name="username" type="text" placeholder="Username" />
+        <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error?.message }}</Message>
+      </div>
+      <div class="flex flex-col gap-1">
+        <InputText name="email" type="text" placeholder="Email" />
+        <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error?.message }}</Message>
+      </div>
+      <Button type="submit" severity="secondary" label="Submit" />
+    </Form>
   </div>
+  <Button label="Load Users" icon="pi pi-users" @click="getUsers" class="ml-2" />
+  <ul>
+    <li v-for="user in users" :key="user.id">
+      {{ user.username }} - {{ user.email }}
+    </li>
+  </ul>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { useToast } from "primevue/usetoast";
+import { z } from 'zod';
+
+const toast = useToast();
+const message = ref('')
+// Validation 
+const resolver = ref(zodResolver(
+    z.object({
+        username: z.string().min(1, { message: 'Username is required.' }),
+        email: z.string()
+              .nonempty({ message: 'Email is required.' })
+              .pipe(z.email({ message: 'Invalid email address.' }))
+    })
+));
+
+// Function triggered on form submit
+const onFormSubmit = async ({ valid, values }) => {
+    if (valid) {
+        try {
+            const response = await axios.post('http://localhost:8080/api/users', {
+              username: values.username, 
+              email: values.email 
+              })
+            message.value = `User ${response.data.username} created!`
+            toast.add({ severity: 'success', summary: message, life: 3000 });
+        } catch (err) {
+          message.value = 'Error creating user'
+          toast.add({ severity: 'error', summary: message, life: 3000 });
+        }
+    }
+  };
 
 // state variables
-const username = ref('')
-const message = ref('')
 const users = ref([])
-
-// create user
-const createUser = async () => {
-  try {
-    const response = await axios.post('http://localhost:8080/api/users', { username: username.value, email: "anton@hvl.no"  })
-    message.value = `User ${response.data.username} created!`
-  } catch (err) {
-    message.value = 'Error creating user'
-  }
-}
 
 // fetch all users
 const getUsers = async () => {
   try {
     const response = await axios.get('http://localhost:8080/api/users')
     users.value = response.data
-    message.value = 'Users loaded!'
   } catch (err) {
     message.value = 'Error fetching users'
   }

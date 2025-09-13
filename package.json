@@ -12,13 +12,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@primevue/forms": "^4.3.9",
     "@primevue/themes": "^4.3.9",
     "axios": "^1.12.1",
     "cors": "^2.8.5",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.9",
-    "vue": "^3.5.18"
+    "vue": "^3.5.18",
+    "zod": "^4.1.8"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
