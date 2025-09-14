@@ -5,8 +5,8 @@ import TheWelcome from './components/TheWelcome.vue'
 
 const routes = [
   { path: '/', component: CreateUser },
-  { path: '/createPoll', component: CreatePoll },
-  { path: '/about', component: TheWelcome }
+  { path: '/poll', component: CreatePoll },
+  { path: '/vote', component: TheWelcome }
 ]
 
 const router = createRouter({

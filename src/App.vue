@@ -3,9 +3,9 @@
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
     <nav>
-      <router-link to="/">Create User</router-link> |
-      <router-link to="/createPoll">Create Poll</router-link> |
-      <router-link to="/about">Vote</router-link>
+      <router-link to="/">User</router-link> |
+      <router-link to="/poll">Poll</router-link> |
+      <router-link to="/vote">Vote</router-link>
     </nav>
   </header>
 

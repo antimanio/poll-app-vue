@@ -10,6 +10,7 @@ import Message from 'primevue/message';
 import Select from 'primevue/select';
 import InputNumber from 'primevue/inputnumber';
 import DatePicker from 'primevue/datepicker';
+import Card from 'primevue/card';
 import { Form } from '@primevue/forms';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
@@ -34,4 +35,5 @@ app.component('Toast', Toast);
 app.component('Select', Select);
 app.component('InputNumber', InputNumber);
 app.component('DatePicker', DatePicker);
+app.component('Card', Card);
 app.mount('#app')

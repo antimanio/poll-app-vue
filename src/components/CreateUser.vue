@@ -1,4 +1,5 @@
 <template>
+  <h3> Create User</h3>
   <div class="card flex justify-center">
     <Toast />
     <Form v-slot="$form" :resolver="resolver" :initialValues="{ username: '', email: '' }" @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
