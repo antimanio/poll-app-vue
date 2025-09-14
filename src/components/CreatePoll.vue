@@ -167,7 +167,6 @@ const onFormSubmitPoll = async ({ valid, values }) => {
 const onFormSubmitOptions = async ({ valid, values }) => {
     if (valid) {
         try {
-            debugger;
             console.log(values.caption)
             console.log(values.order)
             const pollId = selectedQuestion.value.id; 
