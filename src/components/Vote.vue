@@ -47,6 +47,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
+const BASE_URL = "http://localhost:8080"
 const message = ref('')
 const votes = ref([])
 const selectedUser = ref(null)
@@ -60,10 +61,10 @@ const handleVote = async (upvote, row, optionIndex) => {
     const pollId = selectedQuestion.value.id
     let url = ""
     if (upvote){
-      url = "http://localhost:8080/api/votes/upvote"
+      url = `${BASE_URL}/api/votes/upvote`
 
     } else {
-      url = "http://localhost:8080/api/votes/downvote"
+      url = `${BASE_URL}/api/votes/downvote`
     }
     console.log('options row index', optionIndex)
     const response = await axios.post(url, null, {
@@ -82,7 +83,7 @@ const handleVote = async (upvote, row, optionIndex) => {
 
 const getVotes = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/votes/results/${id}`)
+    const response = await axios.get(`${BASE_URL}/api/votes/results/${id}`)
     console.log(response.data)
     votes.value = response.data
   } catch (err) {
@@ -94,7 +95,7 @@ const getVotes = async (id) => {
 //should probably rewrite some, a lot of same methods but yeah...
 const getUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/users')
+    const response = await axios.get(`${BASE_URL}/api/users`)
     users.value = response.data
   } catch (err) {
     message.value = 'Error fetching users'
@@ -104,7 +105,7 @@ const getUsers = async () => {
 
 const getQuestions = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/polls')
+    const response = await axios.get(`${BASE_URL}/api/polls`)
     questions.value = response.data
   } catch (err) {
     message.value = 'Error fetching polls'

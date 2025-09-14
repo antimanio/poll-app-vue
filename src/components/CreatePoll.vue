@@ -71,6 +71,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { useToast } from "primevue/usetoast";
 import { z } from 'zod';
 
+const BASE_URL = "http://localhost:8080"
 const toast = useToast();
 const message = ref('');
 
@@ -94,7 +95,7 @@ const formValuesOptions = ref({
 
 const getUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/users')
+    const response = await axios.get(`${BASE_URL}/api/users`)
     users.value = response.data
   } catch (err) {
     message.value = 'Error fetching users'
@@ -103,7 +104,7 @@ const getUsers = async () => {
 
 const getQuestions = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/polls')
+    const response = await axios.get(`${BASE_URL}/api/polls`)
     questions.value = response.data
   } catch (err) {
     message.value = 'Error fetching polls'
@@ -142,7 +143,7 @@ const onFormSubmitPoll = async ({ valid, values }) => {
         try {
             const validUntilDate = new Date(values.validUntil)
             const validUntilEpoch = Math.floor(validUntilDate.getTime() / 1000)
-            const response = await axios.post('http://localhost:8080/api/polls', null, {
+            const response = await axios.post(`${BASE_URL}/api/polls`, null, {
                 params: {
                     creatorId: selectedUser.value.id,
                     question: values.question,
@@ -171,7 +172,7 @@ const onFormSubmitOptions = async ({ valid, values }) => {
             console.log(values.order)
             const pollId = selectedQuestion.value.id; 
             const response = await axios.post(
-                `http://localhost:8080/api/polls/${pollId}/options`,
+                `${BASE_URL}/api/polls/${pollId}/options`,
                 null,
                 {
                     params: {

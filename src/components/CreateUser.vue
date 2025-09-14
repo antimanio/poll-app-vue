@@ -23,6 +23,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { useToast } from "primevue/usetoast";
 import { z } from 'zod';
 
+const BASE_URL = "http://localhost:8080"
 const toast = useToast();
 const message = ref('')
 
@@ -40,7 +41,7 @@ const resolver = ref(zodResolver(
 const onFormSubmit = async ({ valid, values }) => {
     if (valid) {
         try {
-            const response = await axios.post('http://localhost:8080/api/users', {
+            const response = await axios.post(`${BASE_URL}/api/users`, {
               username: values.username, 
               email: values.email 
               })
