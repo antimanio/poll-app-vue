@@ -19,13 +19,14 @@
             <Message v-if="$form.question?.invalid" severity="error" size="small" variant="simple">{{ $form.question.error?.message }}</Message>
         </div>
         <div class="flex flex-col gap-1">
-            <InputNumber name="validUntil" type="number" placeholder="Valid until" />
+            <DatePicker name="validUntil"  placeholder="Valid until" fluid />
             <Message v-if="$form.validUntil?.invalid" severity="error" size="small" variant="simple">{{ $form.validUntil.error?.message }}</Message>
         </div>
         <Button type="submit" severity="secondary" label="Submit" />
     </Form>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -40,7 +41,7 @@ const selectedUser = ref(null)
 const users = ref([])
 const formValues = ref({
     question: '',
-    validUntil : ''
+    validUntil: null,
 })
 
 const getUsers = async () => {
@@ -62,7 +63,12 @@ onMounted(() => {
 const resolver = ref(zodResolver(
     z.object({
         question: z.string().min(1, { message: 'Question is required.' }),
-        validUntil: z.number({ required_error: 'Valid until is required.' }).min(1)
+        validUntil: z.preprocess((val) => {
+            if (val === '' || val === null) {
+                return null;
+            }
+            return new Date(val);
+        }, z.union([z.date(), z.null().refine((val) => val !== null, { message: 'Date is required.' })]))
     })
 ));
 
@@ -70,14 +76,13 @@ const resolver = ref(zodResolver(
 const onFormSubmit = async ({ valid, values }) => {
     if (valid) {
         try {
-            debugger; // <- execution will stop here
             const validUntilDate = new Date(values.validUntil)
             const validUntilEpoch = Math.floor(validUntilDate.getTime() / 1000)
             const response = await axios.post('http://localhost:8080/api/polls', null, {
                 params: {
                     creatorId: selectedUser.value.id,
                     question: values.question,
-                    validUntilEpoch: 1924992000
+                    validUntilEpoch: validUntilEpoch
                 }
             });
             message.value = `Poll for user ${selectedUser.value.id} created!`;
