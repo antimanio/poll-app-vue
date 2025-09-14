@@ -70,8 +70,6 @@ import axios from 'axios'
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { useToast } from "primevue/usetoast";
 import { z } from 'zod';
-import { getUsers } from '../api/api'
-
 
 const toast = useToast();
 const message = ref('');
@@ -94,13 +92,14 @@ const formValuesOptions = ref({
     order : 0,
 })
 
-const fetchUsers = async () => {
-      try {
-        users.value = await getUsers()
-      } catch (err) {
-        message.value = err.message
-      }
-    }
+const getUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/users')
+    users.value = response.data
+  } catch (err) {
+    message.value = 'Error fetching users'
+  }
+}
 
 const getQuestions = async () => {
   try {
@@ -113,7 +112,7 @@ const getQuestions = async () => {
 
 // Fetch users and questions when component mounts
 onMounted(() => {
-    fetchUsers()
+    getUsers()
     getQuestions()
 })
 
