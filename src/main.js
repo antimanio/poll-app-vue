@@ -14,7 +14,10 @@ import Card from 'primevue/card';
 import { Form } from '@primevue/forms';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
-
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup'; 
+import Row from 'primevue/row';                 
 
 import Aura from '@primevue/themes/aura'
 import 'primeicons/primeicons.css'
@@ -36,4 +39,8 @@ app.component('Select', Select);
 app.component('InputNumber', InputNumber);
 app.component('DatePicker', DatePicker);
 app.component('Card', Card);
+app.component('DataTable', DataTable);
+app.component('Column', Column);
+app.component('ColumnGroup', ColumnGroup);
+app.component('Row', Row);
 app.mount('#app')
