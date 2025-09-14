@@ -1,5 +1,4 @@
 <template>
-  <h2>Create User</h2>
   <div class="card flex justify-center">
     <Toast />
     <Form v-slot="$form" :resolver="resolver" :initialValues="{ username: '', email: '' }" @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
@@ -14,12 +13,6 @@
       <Button type="submit" severity="secondary" label="Submit" />
     </Form>
   </div>
-  <Button label="Load Users" icon="pi pi-users" @click="getUsers" class="ml-2" />
-  <ul>
-    <li v-for="user in users" :key="user.id">
-      {{ user.username }} - {{ user.email }}
-    </li>
-  </ul>
 </template>
 
 <script setup>
@@ -31,6 +24,7 @@ import { z } from 'zod';
 
 const toast = useToast();
 const message = ref('')
+
 // Validation 
 const resolver = ref(zodResolver(
     z.object({
@@ -52,23 +46,10 @@ const onFormSubmit = async ({ valid, values }) => {
             message.value = `User ${response.data.username} created!`
             toast.add({ severity: 'success', summary: message, life: 3000 });
         } catch (err) {
-          message.value = 'Error creating user'
-          toast.add({ severity: 'error', summary: message, life: 3000 });
+            message.value = 'Error creating user'
+            toast.add({ severity: 'error', summary: message, life: 3000 });
         }
     }
   };
-
-// state variables
-const users = ref([])
-
-// fetch all users
-const getUsers = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/api/users')
-    users.value = response.data
-  } catch (err) {
-    message.value = 'Error fetching users'
-  }
-}
 
 </script>

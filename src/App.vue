@@ -1,16 +1,16 @@
-<script setup>
-import CreateUser from './components/CreateUser.vue';
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
 
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-    </header>
+    <nav>
+      <router-link to="/">Create User</router-link> |
+      <router-link to="/createPoll">Create Poll</router-link> |
+      <router-link to="/about">Vote</router-link>
+    </nav>
+  </header>
 
   <main>
-    <CreateUser />
+    <router-view />
   </main>
 </template>
 
