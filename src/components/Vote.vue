@@ -4,6 +4,17 @@
         <template #content>
             <div>
               <Select
+                v-model="selectedUser"
+                :options="users"
+                optionLabel="username"   
+                dataKey="id"           
+                placeholder="Select user"
+                class="w-full md:w-56"
+              />
+              <p v-if="!selectedUser" style="color: red">Need to select question</p>
+            </div>
+            <div>
+              <Select
                 v-model="selectedQuestion"
                 :options="questions"
                 optionLabel="question"   
@@ -13,7 +24,7 @@
               />
               <p v-if="!selectedQuestion" style="color: red">Need to select question</p>
             </div>
-            <div v-if="selectedQuestion"  class="card">
+            <div v-if="selectedUser && selectedQuestion"  class="card">
                 <DataTable :value="votes" tableStyle="min-width: 50rem">
                     <Column field="caption" header="Caption"></Column>
                     <Column header="Upvote">
@@ -38,8 +49,11 @@ import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 const message = ref('')
 const votes = ref([])
+const selectedUser = ref(null)
+const users = ref([])
 const selectedQuestion = ref(null)
 const questions = ref([])
+
 
 const handleVote = async (upvote, row, optionIndex) => {
   try {
@@ -54,7 +68,7 @@ const handleVote = async (upvote, row, optionIndex) => {
     console.log('options row index', optionIndex)
     const response = await axios.post(url, null, {
       params: {
-        userId: 1,
+        userId: selectedUser.value.id,
         pollId: pollId,
         optionIndex: optionIndex
       }
@@ -66,7 +80,6 @@ const handleVote = async (upvote, row, optionIndex) => {
   }
 }
 
-// Can only cast one vote lmfao... per user
 const getVotes = async (id) => {
   try {
     const response = await axios.get(`http://localhost:8080/api/votes/results/${id}`)
@@ -74,7 +87,17 @@ const getVotes = async (id) => {
     votes.value = response.data
   } catch (err) {
     console.log(err)
-    message.value = 'Error fetching users '
+    message.value = 'Error fetching votes '
+  }
+}
+
+//should probably rewrite some, a lot of same methods but yeah...
+const getUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/users')
+    users.value = response.data
+  } catch (err) {
+    message.value = 'Error fetching users'
   }
 }
 
@@ -89,7 +112,8 @@ const getQuestions = async () => {
 }
 
 onMounted(() => {
-    getQuestions()
+  getUsers()
+  getQuestions()
 });
 
 //add watch for selectedQuestion
